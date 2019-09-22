@@ -1,5 +1,3 @@
-package skeletonCodeAssgnmt2;
-
 public class WordRecord {
 	private String text;
 	private  int x;
@@ -81,12 +79,12 @@ public class WordRecord {
 		text=dict.getNewWord();
 		dropped=false;
 		fallingSpeed=(int)(Math.random() * (maxWait-minWait)+minWait); 
-		//System.out.println(getWord() + " falling speed = " + getSpeed());
+		System.out.println(getWord() + " falling speed = " + getSpeed());
 
 	}
 	
 	public synchronized boolean matchWord(String typedText) {
-		//System.out.println("Matching against: "+text);
+		System.out.println("Matching against: "+text);
 		if (typedText.equals(this.text)) {
 			resetWord();
 			return true;

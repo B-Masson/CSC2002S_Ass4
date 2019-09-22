@@ -1,5 +1,3 @@
-package skeletonCodeAssgnmt2;
-
 import javax.swing.*;
 
 import java.awt.*;
@@ -64,7 +62,17 @@ public class WordApp {
 	    {
 	      public void actionPerformed(ActionEvent evt) {
 	          String text = textEntry.getText();
-	          //[snip]
+	          // To Do: Add handler for catching word
+                  boolean flaggo = false;
+                  int i = 0;
+                  while (i < words.length && !flaggo)
+                  {
+                      if(words[i].matchWord(text))
+                      {
+                          flaggo = true;
+                      }
+                      i++;
+                  }
 	          textEntry.setText("");
 	          textEntry.requestFocus();
 	      }
@@ -83,8 +91,8 @@ public class WordApp {
 		    {
 		      public void actionPerformed(ActionEvent e)
 		      {
-		    	  //[snip]
-		    	  textEntry.requestFocus();  //return focus to the text entry field
+		    	  // To do
+                          textEntry.requestFocus();  //return focus to the text entry field
 		      }
 		    });
 		JButton endB = new JButton("End");;
@@ -97,10 +105,19 @@ public class WordApp {
 			    	  //[snip]
 			      }
 			    });
-		
+		JButton quitB = new JButton("Quit");;
+                // add listener for quit event
+                quitB.addActionListener(new ActionListener()
+                {
+                    public void actionPerformed(ActionEvent e)
+                    {
+                        System.out.println("Quitting...");
+                        System.exit(0); //Temrinate program
+                    }
+                });
 		b.add(startB);
 		b.add(endB);
-		
+		b.add(quitB);
 		g.add(b);
     	
       	frame.setLocationRelativeTo(null);  // Center window on screen.
@@ -150,7 +167,7 @@ public static String[] getDictFromFile(String filename) {
 		//[snip]
 		
 		setupGUI(frameX, frameY, yLimit);  
-    	//Start WordPanel thread - for redrawing animation
+                //Start WordPanel thread - for redrawing animation
 
 		int x_inc=(int)frameX/noWords;
 	  	//initialize shared array of current words

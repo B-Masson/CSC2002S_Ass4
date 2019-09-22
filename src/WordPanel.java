@@ -1,11 +1,12 @@
-package skeletonCodeAssgnmt2;
-
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -18,7 +19,8 @@ public class WordPanel extends JPanel implements Runnable {
 
 		
 		public void paintComponent(Graphics g) {
-		    int width = getWidth();
+		    System.out.println("Paint called");
+                    int width = getWidth();
 		    int height = getHeight();
 		    g.clearRect(0,0,width,height);
 		    g.setColor(Color.red);
