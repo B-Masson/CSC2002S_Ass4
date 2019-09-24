@@ -7,7 +7,7 @@ public class WordRecord {
 	
 	private int fallingSpeed;
 	private static int maxWait=1500;
-	private static int minWait=100;
+	private static int minWait=200;
 
 	public static WordDictionary dict;
 	
@@ -79,7 +79,7 @@ public class WordRecord {
 		text=dict.getNewWord();
 		dropped=false;
 		fallingSpeed=(int)(Math.random() * (maxWait-minWait)+minWait); 
-		System.out.println(getWord() + " falling speed = " + getSpeed());
+		//System.out.println(getWord() + " falling speed = " + getSpeed());
 
 	}
 	

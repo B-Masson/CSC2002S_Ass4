@@ -29,102 +29,108 @@ public class WordApp {
 	static WordPanel w;
 	
 	
-	
 	public static void setupGUI(int frameX,int frameY,int yLimit) {
 		// Frame init and dimensions
-    	JFrame frame = new JFrame("WordGame"); 
-    	frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    	frame.setSize(frameX, frameY);
+            JFrame frame = new JFrame("WordGame"); 
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setSize(frameX, frameY);
     	
-      	JPanel g = new JPanel();
-        g.setLayout(new BoxLayout(g, BoxLayout.PAGE_AXIS)); 
-      	g.setSize(frameX,frameY);
+            JPanel g = new JPanel();
+            g.setLayout(new BoxLayout(g, BoxLayout.PAGE_AXIS)); 
+            g.setSize(frameX,frameY);
  
     	
-		w = new WordPanel(words,yLimit);
-		w.setSize(frameX,yLimit+100);
-	    g.add(w);
+            w = new WordPanel(words,yLimit);
+            w.setSize(frameX,yLimit+100);
+            g.add(w);
 	    
 	    
 	    JPanel txt = new JPanel();
 	    txt.setLayout(new BoxLayout(txt, BoxLayout.LINE_AXIS)); 
-	    JLabel caught =new JLabel("Caught: " + score.getCaught() + "    ");
-	    JLabel missed =new JLabel("Missed:" + score.getMissed()+ "    ");
-	    JLabel scr =new JLabel("Score:" + score.getScore()+ "    ");    
+	    final JLabel caught =new JLabel("Caught: " + score.getCaught() + "    ");
+	    final JLabel missed =new JLabel("Missed:" + score.getMissed()+ "    ");
+	    final JLabel scr =new JLabel("Score:" + score.getScore()+ "    ");    
 	    txt.add(caught);
 	    txt.add(missed);
 	    txt.add(scr);
-    
-	    //[snip]
   
 	    final JTextField textEntry = new JTextField("",20);
-	   textEntry.addActionListener(new ActionListener()
+	    textEntry.addActionListener(new ActionListener()
 	    {
-	      public void actionPerformed(ActionEvent evt) {
-	          String text = textEntry.getText();
-	          // To Do: Add handler for catching word
-                  boolean flaggo = false;
-                  int i = 0;
-                  while (i < words.length && !flaggo)
-                  {
-                      if(words[i].matchWord(text))
-                      {
-                          flaggo = true;
-                      }
-                      i++;
-                  }
-	          textEntry.setText("");
-	          textEntry.requestFocus();
-	      }
+                public void actionPerformed(ActionEvent evt) {
+                    String text = textEntry.getText();
+                    // To Do: Add handler for catching word
+                    for (int i = 0; i < words.length; i++)
+                    {
+                        if(words[i].matchWord(text))
+                        {
+                            System.out.println("bumping by " +text.length());
+                            score.caughtWord(text.length());
+                            words[i].resetWord();
+                            break;
+                        }
+                    }
+                caught.setText("Caught: " + score.getCaught() + "    ");
+                missed.setText("Missed:" + score.getMissed()+ "    ");
+                scr.setText("Score:" + score.getScore()+ "    ");
+                
+	        textEntry.setText("");
+	        textEntry.requestFocus();
+                }
 	    });
 	   
-	   txt.add(textEntry);
-	   txt.setMaximumSize( txt.getPreferredSize() );
-	   g.add(txt);
+            txt.add(textEntry);
+	    txt.setMaximumSize( txt.getPreferredSize() );
+            g.add(txt);
 	    
-	    JPanel b = new JPanel();
-        b.setLayout(new BoxLayout(b, BoxLayout.LINE_AXIS)); 
-	   	JButton startB = new JButton("Start");;
+            JPanel b = new JPanel();
+            b.setLayout(new BoxLayout(b, BoxLayout.LINE_AXIS)); 
+            JButton startB = new JButton("Start");;
 		
-			// add the listener to the jbutton to handle the "pressed" event
-			startB.addActionListener(new ActionListener()
-		    {
-		      public void actionPerformed(ActionEvent e)
-		      {
-		    	  // To do
-                          textEntry.requestFocus();  //return focus to the text entry field
-		      }
-		    });
-		JButton endB = new JButton("End");;
+            // add the listener to the jbutton to handle the "pressed" event
+            startB.addActionListener(new ActionListener()
+            {
+		public void actionPerformed(ActionEvent e)
+		{
+                    Thread thread = new Thread(w);           
+                    thread.start();// Initiate
+                    textEntry.requestFocus();  //return focus to the text entry field
+		}
+            });
+            JButton endB = new JButton("End");;
 			
-				// add the listener to the jbutton to handle the "pressed" event
-				endB.addActionListener(new ActionListener()
-			    {
-			      public void actionPerformed(ActionEvent e)
-			      {
-			    	  //[snip]
-			      }
-			    });
-		JButton quitB = new JButton("Quit");;
-                // add listener for quit event
-                quitB.addActionListener(new ActionListener()
+            // add the listener to the jbutton to handle the "pressed" event
+            endB.addActionListener(new ActionListener()
+            {
+                public void actionPerformed(ActionEvent e)
                 {
-                    public void actionPerformed(ActionEvent e)
-                    {
-                        System.out.println("Quitting...");
-                        System.exit(0); //Temrinate program
-                    }
-                });
-		b.add(startB);
-		b.add(endB);
-		b.add(quitB);
-		g.add(b);
+                    w.setDone();
+                    score.resetScore();
+                    caught.setText("Caught: " + score.getCaught() + "    ");
+                    missed.setText("Missed:" + score.getMissed()+ "    ");
+                    scr.setText("Score:" + score.getScore()+ "    ");
+                }
+            });
+            JButton quitB = new JButton("Quit");;
+            // add listener for quit event
+            quitB.addActionListener(new ActionListener()
+            {
+                public void actionPerformed(ActionEvent e)
+                {
+                    System.out.println("Quitting...");
+                    System.exit(0); //Terminate program
+                }
+            });
+            b.add(startB);
+            b.add(endB);
+            b.add(quitB);
+            g.add(b);
     	
-      	frame.setLocationRelativeTo(null);  // Center window on screen.
-      	frame.add(g); //add contents to window
-        frame.setContentPane(g);     
-       	//frame.pack();  // don't do this - packs it into small space
-        frame.setVisible(true);
+            frame.setLocationRelativeTo(null);  // Center window on screen.
+            frame.add(g); //add contents to window
+            frame.setContentPane(g);     
+            //frame.pack();  // don't do this - packs it into small space
+            frame.setVisible(true);
 
 		
 	}
@@ -163,7 +169,6 @@ public static String[] getDictFromFile(String filename) {
 		WordRecord.dict=dict; //set the class dictionary for the words.
 		
 		words = new WordRecord[noWords];  //shared array of current words
-		
 		//[snip]
 		
 		setupGUI(frameX, frameY, yLimit);  

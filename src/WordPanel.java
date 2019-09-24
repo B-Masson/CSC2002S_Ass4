@@ -16,10 +16,11 @@ public class WordPanel extends JPanel implements Runnable {
 		private WordRecord[] words;
 		private int noWords;
 		private int maxY;
+                private int droppedWords; //tracks dropped words to be handled by WordApp
 
 		
 		public void paintComponent(Graphics g) {
-		    System.out.println("Paint called");
+		    //System.out.println("Paint called");
                     int width = getWidth();
 		    int height = getHeight();
 		    g.clearRect(0,0,width,height);
@@ -31,8 +32,8 @@ public class WordPanel extends JPanel implements Runnable {
 		   //draw the words
 		   //animation must be added 
 		    for (int i=0;i<noWords;i++){	    	
-		    	//g.drawString(words[i].getWord(),words[i].getX(),words[i].getY());	
-		    	g.drawString(words[i].getWord(),words[i].getX(),words[i].getY()+20);  //y-offset for skeleton so that you can see the words	
+		    	g.drawString(words[i].getWord(),words[i].getX(),words[i].getY());	
+		    	//g.drawString(words[i].getWord(),words[i].getX(),words[i].getY()+20);  //y-offset for skeleton so that you can see the words	
 		    }
 		   
 		  }
@@ -41,11 +42,54 @@ public class WordPanel extends JPanel implements Runnable {
 			this.words=words; //will this work?
 			noWords = words.length;
 			done=false;
-			this.maxY=maxY;		
+			this.maxY=maxY;	
+                        droppedWords = 0;
 		}
+                
+                public void setDone()
+                {
+                    done = true;
+                }
+                
+                public void undone()
+                {
+                    done = false;
+                }
+                
+                public int getDropped()
+                {
+                    return droppedWords;
+                }
 		
+                @Override
 		public void run() {
-			//add in code to animate this
+                    while(!done)
+                    {
+                        try
+                        {
+                            Thread.sleep(100);
+                        } catch (InterruptedException ex)
+                        {
+                            Logger.getLogger(WordPanel.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                        for (int i = 0; i < noWords; i++)
+                        {
+                            int spd = words[i].getSpeed();
+                            words[i].drop(spd/200);
+                            if (words[i].dropped())
+                            {
+                                droppedWords++;
+                                words[i].resetWord();
+                            }
+                        }
+                        repaint();
+                    }
+                    for (int j = 0; j < noWords; j++)
+                    {
+                        words[j].resetWord();
+                    }
+                    repaint();
+                    undone();
 		}
 
 	}
