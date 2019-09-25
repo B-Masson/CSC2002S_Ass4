@@ -56,7 +56,7 @@ public class WordPanel extends JPanel implements Runnable {
                     done = false;
                 }
                 
-                public int getDropped()
+                public synchronized int getDropped()
                 {
                     return droppedWords;
                 }
@@ -84,12 +84,14 @@ public class WordPanel extends JPanel implements Runnable {
                         }
                         repaint();
                     }
+                    droppedWords = 0;
                     for (int j = 0; j < noWords; j++)
                     {
                         words[j].resetWord();
                     }
                     repaint();
                     undone();
+                    System.out.println("thread complete");
 		}
 
 	}

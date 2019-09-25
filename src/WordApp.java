@@ -9,6 +9,8 @@ import java.io.IOException;
 
 import java.util.Scanner;
 import java.util.concurrent.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 //model is separate from the view.
 
 public class WordApp {
@@ -85,14 +87,14 @@ public class WordApp {
             JPanel b = new JPanel();
             b.setLayout(new BoxLayout(b, BoxLayout.LINE_AXIS)); 
             JButton startB = new JButton("Start");;
-		
+            
             // add the listener to the jbutton to handle the "pressed" event
             startB.addActionListener(new ActionListener()
             {
 		public void actionPerformed(ActionEvent e)
 		{
                     Thread thread = new Thread(w);           
-                    thread.start();// Initiate
+                    thread.start();
                     textEntry.requestFocus();  //return focus to the text entry field
 		}
             });
@@ -105,9 +107,9 @@ public class WordApp {
                 {
                     w.setDone();
                     score.resetScore();
-                    caught.setText("Caught: " + score.getCaught() + "    ");
-                    missed.setText("Missed:" + score.getMissed()+ "    ");
-                    scr.setText("Score:" + score.getScore()+ "    ");
+                    //caught.setText("Caught: " + score.getCaught() + "    ");
+                    //missed.setText("Missed:" + score.getMissed()+ "    ");
+                    //scr.setText("Score:" + score.getScore()+ "    ");
                 }
             });
             JButton quitB = new JButton("Quit");;
@@ -131,7 +133,20 @@ public class WordApp {
             //frame.pack();  // don't do this - packs it into small space
             frame.setVisible(true);
 
-		
+            Runnable scorer = new Runnable()
+                {
+                    public void run()
+                    {
+                        while(true)
+                        {
+                            caught.setText("Caught: " + score.getCaught() + "    ");
+                            missed.setText("Missed:" + w.getDropped()+ "    ");
+                            scr.setText("Score:" + score.getScore()+ "    ");
+                        }
+                    }
+                };
+                Thread ts = new Thread(scorer);
+                ts.start();
 	}
 
 	
@@ -179,7 +194,7 @@ public static String[] getDictFromFile(String filename) {
 		for (int i=0;i<noWords;i++) {
 			words[i]=new WordRecord(dict.getNewWord(),i*x_inc,yLimit);
 		}
-
+                         
 
 	}
 
