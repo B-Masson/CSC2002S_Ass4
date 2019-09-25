@@ -64,10 +64,9 @@ public class WordApp {
                     {
                         if(words[i].matchWord(text))
                         {
-                            System.out.println("bumping by " +text.length());
+                            //System.out.println("bumping by " +text.length());
                             score.caughtWord(text.length());
                             words[i].resetWord();
-                            break;
                         }
                     }
                 caught.setText("Caught: " + score.getCaught() + "    ");
