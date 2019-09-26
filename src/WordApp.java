@@ -55,6 +55,7 @@ public class WordApp {
 	    txt.add(caught);
 	    txt.add(missed);
 	    txt.add(scr);
+            w.setDone();
   
 	    final JTextField textEntry = new JTextField("",20);
 	    textEntry.addActionListener(new ActionListener()
@@ -93,8 +94,12 @@ public class WordApp {
             {
 		public void actionPerformed(ActionEvent e)
 		{
-                    Thread thread = new Thread(w);           
-                    thread.start();
+                    //System.out.println("Status: " +w.isDone());
+                    if (w.isDone())
+                    {
+                        Thread thread = new Thread(w);
+                        thread.start();
+                    }           
                     textEntry.requestFocus();  //return focus to the text entry field
 		}
             });
@@ -139,9 +144,17 @@ public class WordApp {
                     {
                         while(true)
                         {
+                            score.setMissed(w.getDropped());
+                            w.resetDropped();
                             caught.setText("Caught: " + score.getCaught() + "    ");
-                            missed.setText("Missed:" + w.getDropped()+ "    ");
+                            missed.setText("Missed:" + score.getMissed()+ "    ");
                             scr.setText("Score:" + score.getScore()+ "    ");
+                            if (score.getTotal() >= totalWords)
+                            {
+                                w.setDone();
+                                System.out.println("Congradulations, you won! Total score: " +score.getScore() +"\nCaught: " +score.getCaught() +" | Missed: " +score.getMissed());
+                                score.resetScore();
+                            }
                         }
                     }
                 };

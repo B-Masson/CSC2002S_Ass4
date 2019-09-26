@@ -30,6 +30,11 @@ public class Score {
 	public synchronized void missedWord() {
 		missedWords++;
 	}
+        
+        public synchronized void setMissed(int val)
+        {
+            missedWords += val;
+        }
 
 	public synchronized void caughtWord(int length) {
 		caughtWords++;

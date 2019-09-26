@@ -56,13 +56,24 @@ public class WordPanel extends JPanel implements Runnable {
                     done = false;
                 }
                 
+                public synchronized boolean isDone()
+                {
+                    return done;
+                }
+                
                 public synchronized int getDropped()
                 {
                     return droppedWords;
                 }
+                
+                public synchronized void resetDropped()
+                {
+                    droppedWords = 0;
+                }
 		
                 @Override
 		public void run() {
+                    undone();
                     while(!done)
                     {
                         try
@@ -90,8 +101,7 @@ public class WordPanel extends JPanel implements Runnable {
                         words[j].resetWord();
                     }
                     repaint();
-                    undone();
-                    System.out.println("thread complete");
+                    //System.out.println("thread complete");
 		}
 
 	}
