@@ -40,7 +40,6 @@ public class WordApp {
             JPanel g = new JPanel();
             g.setLayout(new BoxLayout(g, BoxLayout.PAGE_AXIS)); 
             g.setSize(frameX,frameY);
- 
     	
             w = new WordPanel(words,yLimit);
             w.setSize(frameX,yLimit+100);
@@ -70,6 +69,7 @@ public class WordApp {
                             //System.out.println("bumping by " +text.length());
                             score.caughtWord(text.length());
                             words[i].resetWord();
+                            if (score.getTotal() == 15)break;
                         }
                     }
                 caught.setText("Caught: " + score.getCaught() + "    ");
@@ -145,7 +145,7 @@ public class WordApp {
                         while(true)
                         {
                             score.setMissed(w.getDropped());
-                            w.resetDropped();
+                            //w.resetDropped();
                             caught.setText("Caught: " + score.getCaught() + "    ");
                             missed.setText("Missed:" + score.getMissed()+ "    ");
                             scr.setText("Score:" + score.getScore()+ "    ");
@@ -153,6 +153,15 @@ public class WordApp {
                             {
                                 w.setDone();
                                 System.out.println("Congradulations, you won! Total score: " +score.getScore() +"\nCaught: " +score.getCaught() +" | Missed: " +score.getMissed());
+                                int temp = score.getScore();
+                                if (temp > score.getHigh())
+                                {
+                                    String tempNm = JOptionPane.showInputDialog("Highscore achieved! Enter your name: ");
+                                    System.out.println("Saving ...");
+                                    score.setHigh(temp);
+                                    score.setName(tempNm);
+                                }
+                                else System.out.println("Current highscore: " +score.getHigh() +" [" +score.getName() +"]"); //There can never be no highscore as this only shows if one game has been completed
                                 score.resetScore();
                             }
                         }

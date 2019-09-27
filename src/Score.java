@@ -2,11 +2,14 @@ public class Score {
 	private int missedWords;
 	private int caughtWords;
 	private int gameScore;
+        private int highscore;
+        private String highscoreName;
 	
 	Score() {
 		missedWords=0;
 		caughtWords=0;
 		gameScore=0;
+                highscore = 0;
 	}
 		
 	// all getters and setters must be synchronized
@@ -33,7 +36,7 @@ public class Score {
         
         public synchronized void setMissed(int val)
         {
-            missedWords += val;
+            missedWords = val;
         }
 
 	public synchronized void caughtWord(int length) {
@@ -46,4 +49,24 @@ public class Score {
 		missedWords=0;
 		gameScore=0;
 	}
+        
+        public void setHigh(int high)
+        {
+            highscore = high;
+        }
+        
+        public int getHigh()
+        {
+            return highscore;
+        }
+        
+        public void setName(String n)
+        {
+            highscoreName = n;
+        }
+        
+        public String getName()
+        {
+            return highscoreName;
+        }
 }
