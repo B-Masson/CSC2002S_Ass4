@@ -1,4 +1,5 @@
 public class WordRecord {
+        //Mostly just James' code
 	private String text;
 	private  int x;
 	private int y;
@@ -19,7 +20,8 @@ public class WordRecord {
 		y=0;	
 		maxY=300;
 		dropped=false;
-		fallingSpeed=(int)(Math.random() * (maxWait-minWait)+minWait); 
+		//fallingSpeed = 1000;
+                fallingSpeed=(int)(Math.random() * (maxWait-minWait)+minWait); 
 	}
 	
 	WordRecord(String text) {
@@ -33,7 +35,6 @@ public class WordRecord {
 		this.maxY=maxY;
 	}
 	
-// all getters and setters must be synchronized
 	public synchronized  void setY(int y) {
 		if (y>maxY) {
 			y=maxY;
@@ -79,11 +80,12 @@ public class WordRecord {
 		text=dict.getNewWord();
 		dropped=false;
 		fallingSpeed=(int)(Math.random() * (maxWait-minWait)+minWait); 
-		//System.out.println(getWord() + " falling speed = " + getSpeed());
+                //fallingSpeed = 1000;
+                //System.out.println(getWord() + " falling speed = " + getSpeed());
 
 	}
 	
-	public synchronized boolean matchWord(String typedText) {
+	public boolean matchWord(String typedText) {
 		//System.out.println("Matching against: "+text);
 		if (typedText.equals(this.text)) {
 			resetWord();

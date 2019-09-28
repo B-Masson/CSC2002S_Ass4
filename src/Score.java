@@ -1,18 +1,20 @@
+
+import java.util.concurrent.atomic.AtomicInteger;
+
 public class Score {
 	private int missedWords;
 	private int caughtWords;
 	private int gameScore;
-        private int highscore;
+        private AtomicInteger highscore;
         private String highscoreName;
 	
 	Score() {
 		missedWords=0;
 		caughtWords=0;
 		gameScore=0;
-                highscore = 0;
+                highscore = new AtomicInteger(0);
 	}
 		
-	// all getters and setters must be synchronized
 	
 	public synchronized int getMissed() {
 		return missedWords;
@@ -50,22 +52,22 @@ public class Score {
 		gameScore=0;
 	}
         
-        public void setHigh(int high)
+        public void setHigh(int high) //Atomically set our highscore value
         {
-            highscore = high;
+            highscore.set(high);
         }
         
-        public int getHigh()
+        public int getHigh() //Atomically grab value
         {
-            return highscore;
+            return highscore.get();
         }
         
-        public void setName(String n)
+        public void setName(String n) //Set name for highscorer
         {
             highscoreName = n;
         }
         
-        public String getName()
+        public String getName() //Grab the name
         {
             return highscoreName;
         }

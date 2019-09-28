@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -16,8 +17,8 @@ public class WordPanel extends JPanel implements Runnable {
 		private WordRecord[] words;
 		private int noWords;
 		private int maxY;
-                private int droppedWords; //tracks dropped words to be handled by WordApp
-                private Color col = Color.green;
+                private AtomicInteger droppedWords; //tracks dropped words to be handled by WordApp
+                private Color col = Color.green; //Used for colour shift
 		
 		public void paintComponent(Graphics g) {
 		    //System.out.println("Paint called");
@@ -30,8 +31,6 @@ public class WordPanel extends JPanel implements Runnable {
 
 		    g.setColor(Color.black);
 		    g.setFont(new Font("Helvetica", Font.PLAIN, 26));
-		   //draw the words
-		   //animation must be added 
 		    for (int i=0;i<noWords;i++){	    	
 		    	g.drawString(words[i].getWord(),words[i].getX(),words[i].getY()-10);	
 		    	//g.drawString(words[i].getWord(),words[i].getX(),words[i].getY()+20);  //y-offset for skeleton so that you can see the words	
@@ -44,7 +43,7 @@ public class WordPanel extends JPanel implements Runnable {
 			noWords = words.length;
 			done=false;
 			this.maxY=maxY;	
-                        droppedWords = 0;
+                        droppedWords = new AtomicInteger(0);
 		}
                 
                 public void setDone()
@@ -57,29 +56,28 @@ public class WordPanel extends JPanel implements Runnable {
                     done = false;
                 }
                 
-                public synchronized boolean isDone()
+                public boolean isDone()
                 {
                     return done;
                 }
                 
-                public synchronized int getDropped()
+                public int getDropped()
                 {
-                    return droppedWords;
+                    return droppedWords.get();
                 }
                 
-                public synchronized void resetDropped()
+                public void resetDropped()
                 {
-                    droppedWords = 0;
+                    droppedWords.set(0);
                 }
 		
-                public synchronized void colourshift(int val)
+                public void colourshift(int val) //Change panel colout based on the value for dropped words
                 {
-                    System.out.println("shifting");
-                    if (val >= 7)col = Color.red;
-                    else if (val >= 5)col = Color.orange;
-                    else if (val >= 3)col = Color.yellow;
-                    else col = Color.green;
-                    System.out.println("to " +col);
+                    double rtemp = 255*(val/10.0);
+                    int r = (int) rtemp;
+                    if (r > 255)r = 255;
+                    int g = 255-r;
+                    col = new Color(r,g,0);
                 }
                 
                 @Override
@@ -101,13 +99,12 @@ public class WordPanel extends JPanel implements Runnable {
                             words[i].drop(spd/200);
                             if (words[i].dropped())
                             {
-                                droppedWords++;
-                                colourshift(droppedWords);
+                                droppedWords.incrementAndGet();
+                                colourshift(getDropped());
                                 words[i].resetWord();
                             }
                             /*Runnable eachWord = new Runnable()
-                            {
-                                private int ini = i;                             
+                            {                            
                                 public void run()
                                 {
                                     int spd = words[i].getSpeed();
@@ -115,6 +112,7 @@ public class WordPanel extends JPanel implements Runnable {
                                     if (words[i].dropped())
                                     {
                                         droppedWords++;
+                                        colourshift(droppedWords);
                                         words[i].resetWord();
                                     }
                                 }

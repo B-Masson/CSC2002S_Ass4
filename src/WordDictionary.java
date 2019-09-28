@@ -1,4 +1,5 @@
 public class WordDictionary {
+        //This is all just James' code
 	int size;
 	static String [] theDict= {"litchi","banana","apple","mango","pear","orange","strawberry",
 		"cherry","lemon","apricot","peach","guava","grape","kiwi","quince","plum","prune",
