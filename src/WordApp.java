@@ -174,7 +174,11 @@ public class WordApp {
                                     score.setHigh(temp);
                                     score.setName(tempNm);
                                 }
-                                else System.out.println("Current highscore: " +score.getHigh() +" [" +score.getName() +"]"); //There can never be no highscore as this only shows if one game has been completed
+                                else
+                                {
+                                    if (score.getHigh() != 0) System.out.println("Current highscore: " +score.getHigh() +" [" +score.getName() +"]");
+                                    else System.out.println("No highscore yet...");
+                                } //If the user gets 0, we treat it as if there's still no highscore (because 0 is not a score)
                                 score.resetScore();
                             }
                         }
